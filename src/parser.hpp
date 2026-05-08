@@ -1,5 +1,6 @@
 #pragma once
 
+#include <cassert>
 #include <cstdlib>
 #include <iostream>
 #include <optional>
@@ -32,6 +33,18 @@ class Parser {
             node_term_ident->ident = ident.value();
             auto node_term = m_allocator.alloc<NodeTerm>();
             node_term->var = node_term_ident;
+            return node_term;
+        } else if (auto ident = try_consume(TokenType::open_paren)) {
+            auto expr = parse_expr();
+            if(!expr.has_value()) {
+                std::cerr << "Expected Expression" << std::endl;
+                std::exit(EXIT_FAILURE);
+            }
+            try_consume(TokenType::close_paren, "Expected ')'");
+            auto term_paren = m_allocator.alloc<NodeTermParen>();
+            auto node_term = m_allocator.alloc<NodeTerm>();
+            term_paren->expr = expr.value();
+            node_term->var = term_paren;
             return node_term;
         } else {
             return {};
@@ -77,6 +90,13 @@ class Parser {
                 add->lhs = expr_lhs2;
                 add->rhs = expr_rhs.value();
                 expr->var = add;
+            } else if (op.type == TokenType::sub) {
+                auto sub = m_allocator.alloc<NodeBinExprSub>();
+                expr_lhs2->var = expr_lhs->var;
+                sub->lhs = expr_lhs2;
+                sub->rhs = expr_rhs.value();
+                expr->var = sub;
+                expr->var = sub;
             } else if (op.type == TokenType::mult) {
                 auto multi = m_allocator.alloc<NodeBinExprMulti>();
                 expr_lhs2->var = expr_lhs->var;
@@ -84,6 +104,15 @@ class Parser {
                 multi->rhs = expr_rhs.value();
                 expr->var = multi;
                 expr->var = multi;
+            } else if (op.type == TokenType::div) {
+                auto div = m_allocator.alloc<NodeBinExprDiv>();
+                expr_lhs2->var = expr_lhs->var;
+                div->lhs = expr_lhs2;
+                div->rhs = expr_rhs.value();
+                expr->var = div;
+                expr->var = div;
+            } else {
+                assert(false);
             }
 
             expr_lhs->var = expr;

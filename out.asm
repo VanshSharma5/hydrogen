@@ -6,26 +6,19 @@ _start:
     push rax
     pop rax
     pop rbx
-    mul rax, rbx
+    mul rbx
     push rax
-    mov rax, 4
+    mov rax, 2
     push rax
-    pop rax
-    pop rbx
-    add rax, rbx
-    push rax
-    push QWORD [rsp + 0]
     mov rax, 10
     push rax
     pop rax
     pop rbx
-    add rax, rbx
+    sub rax, rbx
     push rax
-    push QWORD [rsp + 8]
-    push QWORD [rsp + 8]
     pop rax
     pop rbx
-    mul rax, rbx
+    add rax, rbx
     push rax
     push QWORD [rsp + 0]
     mov rax, 60

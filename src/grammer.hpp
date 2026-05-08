@@ -13,7 +13,16 @@ struct NodeTermIdent {
     Token ident;
 };
 
+struct NodeTermParen {
+    NodeExpr *expr;
+};
+
 struct NodeBinExprAdd {
+    NodeExpr *lhs;
+    NodeExpr *rhs;
+};
+
+struct NodeBinExprSub {
     NodeExpr *lhs;
     NodeExpr *rhs;
 };
@@ -23,13 +32,20 @@ struct NodeBinExprMulti {
     NodeExpr *rhs;
 };
 
+struct NodeBinExprDiv {
+    NodeExpr *lhs;
+    NodeExpr *rhs;
+};
+
 struct NodeBinExpr {
     // NodeBinExprAdd* add;
-    std::variant<NodeBinExprAdd *, NodeBinExprMulti *> var;
+    std::variant<NodeBinExprAdd *, NodeBinExprMulti *, NodeBinExprDiv *,
+                 NodeBinExprSub *>
+        var;
 };
 
 struct NodeTerm {
-    std::variant<NodeTermIntLit *, NodeTermIdent *> var;
+    std::variant<NodeTermIntLit *, NodeTermIdent *, NodeTermParen*> var;
 };
 
 struct NodeExpr {
